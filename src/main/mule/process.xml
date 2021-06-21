@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="get-routes" doc:id="3822830f-ae83-4728-ac86-201de457dc8d" >
+		<logger level="INFO" doc:name="Start" doc:id="c63882f6-634a-4557-88db-dc6047e1974f" message="Start Get Routes"/>
+		<http:request method="GET" doc:name="First Coach GET /fetchRoutes" doc:id="e5313ed2-82a9-4dde-836e-cfda6bf4925d" config-ref="HTTP_Request_configuration-FirstCoach" path="/fetchRoutes" sendCorrelationId="ALWAYS" correlationId="#[attributes.headers.'x-correlation-id']"/>
+		<ee:transform doc:name="Response Body" doc:id="07b4c986-9253-4b70-9298-f93bc194b538" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	originLocation: {
+		locationCode: payload01.departureLocationCode
+	},
+	destinationLocation: {
+		locationCode: payload01.arrivalLocationCode
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End" doc:id="db5d8d07-ea53-4df2-ac29-dbad66fd29e7" message="End  Get Routes"/>
+	</flow>
+	<flow name="get-schedules" doc:id="8dc8beda-64e3-494f-9826-930dd328939c" >
+		<logger level="INFO" doc:name="Start" doc:id="be8a8a97-f541-472d-93d5-5e32b11ac529" message="Start Get Schedules - departureLocationCode=#[attributes.queryParams.departureLocationCode], destinationLocationCode=#[attributes.queryParams.destinationLocationCode]"/>
+		<ee:transform doc:name="Request Body" doc:id="68500ed2-a0de-423b-8aad-0b24ef3824de" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	departureLocationCode: attributes.queryParams.departureLocationCode,
+	destinationLocationCode: attributes.queryParams.destinationLocationCode
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="First Coach POST /fetchSchedules" doc:id="fd3ca2d6-114e-4776-a0bf-145e05601c95" config-ref="HTTP_Request_configuration-FirstCoach" path="/fetchSchedules" sendCorrelationId="ALWAYS" correlationId="#[attributes.headers.'x-correlation-id']">
+		</http:request>
+		<ee:transform doc:name="Response Body" doc:id="5cc1f91d-c30b-4dd7-b39f-2aef2787f849" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	departureSchedules: payload.schedules map ( schedule , indexOfSchedule ) -> {
+		availableSeats: schedule.availableSeats,
+		departureDateTime: schedule.departureDateTime,
+		travelRoute: {
+			destinationLocation: {
+				locationCode: schedule.toLocation
+			},
+			originLocation: {
+				locationCode: schedule.fromLocation
+			}
+		}
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End" doc:id="3f45fef8-3a7f-4036-9ada-75c29ac922ad" message="End Get Schedules"/>
+	</flow>
+</mule>

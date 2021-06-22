@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="new-test-suite-routes.xml" />
+	<munit:test name="test-suite-routes-get:\(transportType)\(transportCompany)\routes:sapi-first-coach-configTest" doc:id="ffac141f-a8c2-47d0-8fe6-358e832da4fa" description="Test Schedules 001">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="ad953115-0171-4cb4-8e73-371282543ca9" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="UnitTest-Routes-001" attributeName="correlationId" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://first-coach-api-routes-response.json', 'application/json')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="2ff4f127-e1cd-4fc1-8a6c-06fafa93d61f" >
+				<munit:attributes value="#[{&#10;	headers:&#10;		{ 'x-correlation-id' :  'UnitTest-Routes-001'}&#10;}]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to get:\(transportType)\(transportCompany)\routes:sapi-first-coach-config" doc:id="ddb3c434-171a-42d8-829f-c9a965d848d4" name="get:\(transportType)\(transportCompany)\routes:sapi-first-coach-config"/>
+		</munit:execution>
+		<munit:validation >
+			<ee:transform doc:name="Transform Message" doc:id="a0b36374-c369-4b62-b610-87019edd1752" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="f3ea0852-57c6-44e9-9db9-910e5a4a7d95" actual="#[payload]" expected="#[output application/java --- readUrl('classpath://first-coach-sapi-routes-response.json', 'application/json')]"/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

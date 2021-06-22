@@ -1,0 +1,28 @@
+{
+  "departureSchedules": [
+    {
+      "availableSeats": 50,
+      "departureDateTime": "2019-05-30T18:41:41.090Z",
+      "travelRoute": {
+        "destinationLocation": {
+          "locationCode": "PER-AU"
+        },
+        "originLocation": {
+          "locationCode": "MEL-AU"
+        }
+      }
+    },
+    {
+      "availableSeats": 5,
+      "departureDateTime": "2019-01-11T18:41:41.090Z",
+      "travelRoute": {
+        "destinationLocation": {
+          "locationCode": "DAR-AU"
+        },
+        "originLocation": {
+          "locationCode": "SYD-AU"
+        }
+      }
+    }
+  ]
+}

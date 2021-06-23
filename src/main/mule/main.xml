@@ -115,7 +115,7 @@ output application/json
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-{message: "Authentication Attempt Failed"}]]></ee:set-payload>
+{message: "Method Not Allowed- Incorrect role"}]]></ee:set-payload>
 					</ee:message>
 					<ee:variables >
 						<ee:set-variable variableName="httpStatus" ><![CDATA[501]]></ee:set-variable>

@@ -85,11 +85,29 @@ type FetchSchedulesFirstCoachResponse = {|
   </types:enrichment>
   <types:enrichment select="#8dc8beda-64e3-494f-9826-930dd328939c">
     <types:processor-declaration>
-      <types:output-event>
+      <types:input-event>
         <types:message>
           <types:attributes type="HttpRequestAttributes"/>
         </types:message>
-      </types:output-event>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#3668b56b-fbd4-4ea4-ac2c-6a375f3a3f4e">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:attributes type="HttpRequestAttributes"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#ae815953-6335-4531-8894-f2185b0bc732">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:attributes type="HttpRequestAttributes"/>
+        </types:message>
+      </types:input-event>
     </types:processor-declaration>
   </types:enrichment>
 </types:mule>

@@ -22,7 +22,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		</munit:behavior>
 		<munit:execution >
 			<munit:set-event doc:name="Set Event" doc:id="5ad09e5e-9519-49b2-9c76-7654c659408e" >
-				<munit:attributes value="#[{&#10;	headers:&#10;		{ 'x-correlation-id' :  'UnitTest-Schedules-001'},&#10;	queryParams:&#10;		{ 'departureLocationCode' :  'PER-AU', 'departureLocationCode' :  'MEL-AU'},&#10;}]" />
+				<munit:attributes value="#[{&#10;	headers:&#10;		{ 'x-correlation-id' :  'UnitTest-Schedules-001'},&#10;	queryParams:&#10;		{ 'departureLocationCode' :  'MEL-AU', 'destinationLocationCode' :  'PER-AU'},&#10;}]" />
 			</munit:set-event>
 			<flow-ref doc:name="Flow-ref to get:\(transportType)\(transportCompany)\schedules:sapi-first-coach-config" doc:id="6e3345fc-269a-496c-8985-a2eb641075f0" name="get:\(transportType)\(transportCompany)\schedules:sapi-first-coach-config"/>
 		</munit:execution>

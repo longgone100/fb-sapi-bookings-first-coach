@@ -27,6 +27,8 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 	</flow>
 	<flow name="get-schedules" doc:id="8dc8beda-64e3-494f-9826-930dd328939c" >
 		<logger level="INFO" doc:name="Start" doc:id="be8a8a97-f541-472d-93d5-5e32b11ac529" message="Start Get Schedules - departureLocationCode=#[attributes.queryParams.departureLocationCode], destinationLocationCode=#[attributes.queryParams.destinationLocationCode]"/>
+		<set-variable value="#[attributes.queryParams.departureLocationCode]" doc:name="departureLocationCode" doc:id="3668b56b-fbd4-4ea4-ac2c-6a375f3a3f4e" variableName="departureLocationCode"/>
+		<set-variable value="#[attributes.queryParams.destinationLocationCode]" doc:name="destinationLocationCode" doc:id="ae815953-6335-4531-8894-f2185b0bc732" variableName="destinationLocationCode"/>
 		<ee:transform doc:name="Request Body" doc:id="68500ed2-a0de-423b-8aad-0b24ef3824de" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -46,7 +48,10 @@ output application/json
 output application/json
 ---
 {
-	departureSchedules: payload.schedules map ( schedule , indexOfSchedule ) -> {
+	departureSchedules: payload.schedules 
+	filter ($.fromLocation == vars.departureLocationCode and
+	 	$.toLocation == vars.destinationLocationCode)
+	 map ( schedule , indexOfSchedule ) -> {
 		availableSeats: schedule.availableSeats,
 		departureDateTime: schedule.departureDateTime,
 		travelRoute: {
